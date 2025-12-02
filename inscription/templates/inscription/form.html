@@ -1,0 +1,305 @@
+{% load form_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bank Inscription</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #e9f1ff, #f5f9ff);
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* NAVBAR */
+        .bank-nav {
+            background: #0d47a1;
+            padding: 15px 30px;
+            border-radius: 0 0 18px 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bank-nav h2 {
+            color: white;
+            margin: 0;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* Moving Logo */
+        .bank-logo {
+            width: 40px;
+            height: 40px;
+            background: #ffffff33;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            margin-right: 15px;
+        }
+
+        .bank-logo::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.6);
+            border-radius: 50%;
+            top: 0;
+            left: -100%;
+            animation: wave 2s linear infinite;
+        }
+
+        @keyframes wave {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        .bank-support {
+            color: white;
+            font-size: 0.9rem;
+            text-align: right;
+        }
+
+        .bank-support a {
+            color: #ffd54f;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .bank-support a:hover {
+            color: #fff176;
+            text-decoration: underline;
+        }
+
+        /* CARD */
+        .bank-card {
+            background: white;
+            border-radius: 18px;
+            border: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 40px;
+        }
+
+        /* Buttons */
+        .btn-rounded {
+            border-radius: 20px;
+            padding: 8px 26px;
+            font-weight: 500;
+        }
+
+        /* Progress bar */
+        .progress {
+            height: 10px;
+            border-radius: 10px;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: #0d47a1;
+        }
+
+        /* Validation styles */
+        .is-invalid {
+            border-color: #dc3545 !important;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="bank-nav mb-5">
+    <div class="d-flex align-items-center">
+        <div class="bank-logo"></div>
+        <h2>BlueWave Bank — Client Registration</h2>
+    </div>
+    <div class="bank-support">
+        Need help? <a href="mailto:support@bluewavebank.com">Contact Us</a> | Hotline: +1 234 567 890
+    </div>
+</nav>
+
+<div class="container">
+    <div class="bank-card mx-auto" style="max-width: 900px;">
+
+        <div class="progress mb-4">
+            <div id="progressBar" class="progress-bar bg-primary" style="width: 25%"></div>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" id="multiStepForm" action="{% url 'inscription' %}">
+            {% csrf_token %}
+
+            <!-- STEP 1 -->
+            <div class="step">
+                <h4 class="step-title mb-3">Personal Information</h4>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Full Name</label>
+                        {{ form.full_name|add_class:"form-control" }}
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Age</label>
+                        {{ form.age|add_class:"form-control" }}
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Gender</label>
+                        {{ form.gender|add_class:"form-select" }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Nationality</label>
+                        {{ form.nationality|add_class:"form-control" }}
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Residence Country</label>
+                        {{ form.residence_country|add_class:"form-select" }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="step d-none">
+                <h4 class="step-title mb-3">Contact Information</h4>
+
+                <div class="mb-3">
+                    <label class="form-label">Phone</label>
+                    {{ form.phone|add_class:"form-control" }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    {{ form.email|add_class:"form-control" }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Address</label>
+                    {{ form.address|add_class:"form-control" }}
+                </div>
+            </div>
+
+            <!-- STEP 3 -->
+            <div class="step d-none">
+                <h4 class="step-title mb-3">Financial Information</h4>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Profession</label>
+                        {{ form.profession|add_class:"form-control" }}
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Monthly Revenue</label>
+                        {{ form.revenue|add_class:"form-control" }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Source of Income</label>
+                        {{ form.source_of_income|add_class:"form-select" }}
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Account Purpose</label>
+                        {{ form.account_purpose|add_class:"form-select" }}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Account Type</label>
+                    {{ form.account_type|add_class:"form-select" }}
+                </div>
+            </div>
+
+            <!-- STEP 4 -->
+            <div class="step d-none">
+                <h4 class="step-title mb-3">Identity Verification</h4>
+
+                <div class="mb-3">
+                    <label class="form-label">ID Type</label>
+                    {{ form.id_type|add_class:"form-select" }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">ID Number</label>
+                    {{ form.id_number|add_class:"form-control" }}
+                </div>
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="d-flex justify-content-between mt-4">
+                <button type="button" class="btn btn-outline-secondary btn-rounded btn-prev d-none">Previous</button>
+                <button type="button" class="btn btn-primary btn-rounded btn-next">Next</button>
+                <button type="submit" class="btn btn-success btn-rounded d-none">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+const steps = document.querySelectorAll(".step");
+const nextBtn = document.querySelector(".btn-next");
+const prevBtn = document.querySelector(".btn-prev");
+const submitBtn = document.querySelector("button[type='submit']");
+const progressBar = document.getElementById("progressBar");
+let currentStep = 0;
+
+function showStep(n){
+    steps.forEach((s,i)=> s.classList.add("d-none"));
+    steps[n].classList.remove("d-none");
+
+    prevBtn.classList.toggle("d-none", n===0);
+    nextBtn.classList.toggle("d-none", n===steps.length-1);
+    submitBtn.classList.toggle("d-none", n!==steps.length-1);
+
+    progressBar.style.width = ((n+1)/steps.length * 100) + "%";
+}
+
+// --------- VALIDATION ----------
+function validateStep(n) {
+    const fields = steps[n].querySelectorAll("input, select, textarea");
+    let valid = true;
+
+    fields.forEach(field => {
+        if (!field.checkValidity()) {
+            field.classList.add("is-invalid");
+            valid = false;
+        } else {
+            field.classList.remove("is-invalid");
+        }
+    });
+
+    return valid;
+}
+
+nextBtn.addEventListener("click", () => {
+    if (!validateStep(currentStep)) return;
+
+    currentStep++;
+    if (currentStep >= steps.length) currentStep = steps.length - 1;
+    showStep(currentStep);
+});
+
+prevBtn.addEventListener("click", () => {
+    currentStep--;
+    if (currentStep < 0) currentStep = 0;
+    showStep(currentStep);
+});
+
+showStep(currentStep);
+</script>
+
+</body>
+</html>
