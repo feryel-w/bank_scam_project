@@ -1,0 +1,75 @@
+{% extends "inscription/admin_base.html" %}
+{% block content %}
+<div class="container-card">
+
+    <h1 class="mb-4">All Clients</h1>
+
+    <!-- Search -->
+    <input type="text" id="searchAllInput" class="form-control search-input" placeholder="Search by name or email">
+
+    {% if clients %}
+        <table class="table table-hover mt-3">
+            <thead class="table-dark">
+                <tr>
+                    <th>Client Info</th>
+                    <th>Status</th>
+                    <th>RIB</th>
+                </tr>
+            </thead>
+            <tbody id="allClientsTable">
+                {% for client in clients %}
+                    <tr>
+                        <td>
+                            <span><strong>Name:</strong> {{ client.full_name }}</span><br>
+                            <span><strong>Email:</strong> {{ client.email }}</span><br>
+                            <span><strong>Phone:</strong> {{ client.phone }}</span><br>
+                            <span><strong>Profession:</strong> {{ client.profession }}</span><br>
+                            <span><strong>ID:</strong> {{ client.id_type }} {{ client.id_number }}</span>
+                        </td>
+                        <td>
+                            {% if client.is_blacklisted %}
+                                <span class="text-danger fw-bold">Blacklisted</span>
+                            {% elif client.is_verified %}
+                                <span class="text-success fw-bold">Verified</span>
+                            {% elif client.is_suspected %}
+                                <span class="text-warning fw-bold">Suspected</span>
+                            {% else %}
+                                <span>Unknown</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if client.rib_code %}
+                                <span class="text-primary fw-bold">{{ client.rib_code }}</span>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-center mt-4">No clients found.</p>
+    {% endif %}
+</div>
+
+<script>
+    const searchAllInput = document.getElementById('searchAllInput');
+    const allClientsTable = document.getElementById('allClientsTable');
+
+    searchAllInput.addEventListener('keyup', function() {
+        const filter = searchAllInput.value.toLowerCase();
+        const rows = allClientsTable.getElementsByTagName('tr');
+
+        for (let i = 0; i < rows.length; i++) {
+            const name = rows[i].querySelector('td span strong').nextSibling.textContent.toLowerCase();
+            const email = rows[i].querySelector('td span:nth-child(2)').textContent.toLowerCase();
+            if (name.includes(filter) || email.includes(filter)) {
+                rows[i].style.display = '';
+            } else {
+                rows[i].style.display = 'none';
+            }
+        }
+    });
+</script>
+{% endblock %}

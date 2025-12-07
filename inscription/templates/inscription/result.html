@@ -115,8 +115,15 @@
 <div class="container">
     <div class="bank-card mx-auto" style="max-width: 900px;">
 
-        {% if risk == 1 %}
+        {% if blocked %}
+            <h3 class="text-danger mb-3">⛔ ACCESS DENIED — BLACKLISTED CLIENT</h3>
+            <div class="alert alert-danger">
+                This client is on the blacklist and cannot create an account.
+            </div>
+
+        {% elif risk == 1 %}
             <h3 class="text-danger mb-3">⚠️ POSSIBLE SCAM RISK</h3>
+
         {% else %}
             <h3 class="text-success mb-3">✔️ SAFE CLIENT</h3>
         {% endif %}

@@ -1,0 +1,74 @@
+{% extends "inscription/admin_base.html" %}
+{% block content %}
+<div class="container-card">
+
+    <h1 class="mb-4">Verify Clients</h1>
+
+    <!-- Search -->
+    <input type="text" id="searchInput" class="form-control search-input" placeholder="Search by name or email">
+
+    {% if suspected_clients %}
+        <table class="table table-hover mt-3">
+            <thead class="table-dark">
+                <tr>
+                    <th>Client Info</th>
+                    <th>Actions</th>
+                    <th>RIB</th>
+                </tr>
+            </thead>
+            <tbody id="clientsTable">
+                {% for client in suspected_clients %}
+                    <tr>
+                        <td>
+                            <span><strong>Name:</strong> {{ client.full_name }}</span><br>
+                            <span><strong>Email:</strong> {{ client.email }}</span><br>
+                            <span><strong>Phone:</strong> {{ client.phone }}</span><br>
+                            <span><strong>Profession:</strong> {{ client.profession }}</span><br>
+                            <span><strong>ID:</strong> {{ client.id_type }} {{ client.id_number }}</span>
+                        </td>
+                        <td>
+                            <form method="POST" action="{% url 'verify_client' client.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success btn-sm">Verify</button>
+                            </form>
+                            <form method="POST" action="{% url 'blacklist_client' client.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm">Blacklist</button>
+                            </form>
+                        </td>
+                        <td>
+                            {% if client.rib_code %}
+                                <span class="text-primary fw-bold">{{ client.rib_code }}</span>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-center mt-4">No suspected clients to verify.</p>
+    {% endif %}
+</div>
+
+<script>
+    const searchInput = document.getElementById('searchInput');
+    const clientsTable = document.getElementById('clientsTable');
+
+    searchInput.addEventListener('keyup', function() {
+        const filter = searchInput.value.toLowerCase();
+        const rows = clientsTable.getElementsByTagName('tr');
+
+        for (let i = 0; i < rows.length; i++) {
+            const name = rows[i].querySelector('td span strong').nextSibling.textContent.toLowerCase();
+            const email = rows[i].querySelector('td span:nth-child(2)').textContent.toLowerCase();
+            if (name.includes(filter) || email.includes(filter)) {
+                rows[i].style.display = '';
+            } else {
+                rows[i].style.display = 'none';
+            }
+        }
+    });
+</script>
+{% endblock %}
